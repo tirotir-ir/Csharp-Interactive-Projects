@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34912.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project11_MatrixMultiply2x2", "Project11_MatrixMultiply2x2.csproj", "{B6FCD8EB-B354-4892-BE2B-1158D340E45A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6FCD8EB-B354-4892-BE2B-1158D340E45A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6FCD8EB-B354-4892-BE2B-1158D340E45A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6FCD8EB-B354-4892-BE2B-1158D340E45A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6FCD8EB-B354-4892-BE2B-1158D340E45A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

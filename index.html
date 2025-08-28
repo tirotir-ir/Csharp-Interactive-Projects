@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C# Interactive Projects — Console + WinForms (40) - (by tirotir.ir)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+<style>.code{white-space:pre;overflow:auto;border:1px solid #e5e7eb;border-radius:.5rem;padding:1rem;background:#111;color:#eee;direction:ltr;text-align:left}.table{border-collapse:collapse;width:100%}.table th,.table td{border:1px solid #e5e7eb;padding:.5rem;text-align:left}.badge{display:inline-block;padding:.15rem .45rem;border-radius:.5rem;background:#EEF2FF;color:#3730A3;font-size:.75rem;margin-right:.35rem}img.sshot{max-width:100%; border:1px solid #e5e7eb; border-radius:.5rem}</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<header class="bg-indigo-700 text-white p-4 shadow">
+<h1 class="text-2xl font-bold">C# Interactive Projects — Console + WinForms (40)</h1>
+<p class="text-sm">Per-project <strong>code viewer</strong> + <strong>step-by-step guide</strong> + <strong>screenshots</strong> (if present).</p>
+</header>
+<main class="p-4 space-y-6">
+<div class="bg-white p-4 rounded shadow">
+<input id="q" placeholder="Search projects..." class="border p-2 rounded w-full mb-3">
+<div class="flex gap-2 mb-3">
+<button data-filter="all" class="px-3 py-1 bg-indigo-600 text-white rounded">All</button>
+<button data-filter="console" class="px-3 py-1 bg-gray-200 rounded">Console</button>
+<button data-filter="winforms" class="px-3 py-1 bg-gray-200 rounded">WinForms</button>
+</div>
+<table class="w-full table-auto">
+<thead><tr class="bg-indigo-50"><th class="p-2">#</th><th class="p-2">Name</th><th class="p-2">Type</th><th class="p-2">Folder</th><th class="p-2">Code</th><th class="p-2">Guide</th><th class="p-2">Screenshot</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+</main>
+<div id="modalCode" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+<div class="bg-white max-w-3xl w-full p-4 rounded shadow">
+<div class="flex justify-between items-center mb-2">
+<h3 id="mTitleCode" class="font-bold"></h3>
+<button onclick="hideCode()" class="text-red-600">✖</button>
+</div>
+<pre class="code" id="mCode">Loading...</pre>
+</div></div>
+<div id="modalGuide" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+<div class="bg-white max-w-3xl w-full p-4 rounded shadow overflow-y-auto max-h-[90vh]">
+<div class="flex justify-between items-center mb-2">
+<h3 id="mTitleGuide" class="font-bold"></h3>
+<button onclick="hideGuide()" class="text-red-600">✖</button>
+</div>
+<div id="mGuide" class="space-y-4"></div>
+</div></div>
+<script>
+const consoles = ["AddTwoNumbers", "CalculatorBasic", "TempConverter", "PrimeChecker", "Factorial", "Fibonacci", "GuessNumber", "FileWordCount", "SimpleTodo", "StudentGrades", "MatrixMultiply2x2", "StringUtilities", "BMI", "UnitConverter", "DateDiff", "PasswordGenerator", "JsonReadWrite", "HttpGetDemo", "CsvParser", "LinqExamples"];
+const wins = ["LoginForm", "NotepadLite", "CalculatorGui", "TodoList", "StopwatchTimer", "PictureViewer", "ColorPickerTracks", "GridStudents", "WebBrowserLite", "DrawPad", "ProgressDemo", "TwoFormsComm", "ThemeToggle", "ClipboardTool", "NotifyIconDemo", "FileWatcher", "KeyTester", "JsonSettings", "ResizeInfo", "ShowTime"];
+const data = [];
+for(let i=1;i<=20;i++) data.push({i,name:`Project${String(i).padStart(2,'0')}_${consoles[i-1]}`,type:'console',path:`projects/Project${String(i).padStart(2,'0')}_${consoles[i-1]}`});
+for(let i=1;i<=20;i++) data.push({i,name:`Project${String(i).padStart(2,'0')}_${wins[i-1]}`,type:'winforms',path:`winforms/Project${String(i).padStart(2,'0')}_${wins[i-1]}`});
+const GUIDE = {"console": {"Project01_AddTwoNumbers": {"overview": "Read two integers and print the sum.", "steps": ["cd projects/Project01_AddTwoNumbers", "dotnet run", "Enter two numbers → see the sum."], "io": [["Input", "a,b:int"], ["Output", "sum:int"]], "extensions": ["Support doubles.", "Add subtraction/multiplication/division."]}, "Project02_CalculatorBasic": {"overview": "Four-function calculator.", "steps": ["cd projects/Project02_CalculatorBasic", "dotnet run", "Enter a, op (+,-,*,/), b."], "io": [["Input", "a,b:double; op:+-*/"], ["Output", "result:double or Error"]], "extensions": ["Add power and root.", "Keep a history."]}, "Project03_TempConverter": {"overview": "Convert Celsius to Fahrenheit.", "steps": ["cd projects/Project03_TempConverter", "dotnet run", "Type Celsius value."], "io": [["Input", "celsius:double"], ["Output", "fahrenheit:double"]], "extensions": ["Add F→C conversion."]}, "Project04_PrimeChecker": {"overview": "Check if a number is prime.", "steps": ["cd projects/Project04_PrimeChecker", "dotnet run", "Type n."], "io": [["Input", "n:int"], ["Output", "Prime / Not prime"]], "extensions": ["List primes up to n."]}, "Project05_Factorial": {"overview": "Compute factorial with a loop.", "steps": ["cd projects/Project05_Factorial", "dotnet run", "Type n."], "io": [["Input", "n:int"], ["Output", "n!:long"]], "extensions": ["Add recursive version."]}, "Project06_Fibonacci": {"overview": "Generate Fibonacci sequence up to n terms.", "steps": ["cd projects/Project06_Fibonacci", "dotnet run"], "io": [["Input", "n:int"]], "extensions": ["Print only the nth term."]}, "Project07_GuessNumber": {"overview": "Guess-the-number game (1..100).", "steps": ["cd projects/Project07_GuessNumber", "dotnet run"], "io": [["Output", "Win in k tries"]], "extensions": ["Custom range.", "Best score."]}, "Project08_FileWordCount": {"overview": "Count lines/words/chars of a file.", "steps": ["cd projects/Project08_FileWordCount", "dotnet run", "Enter file path (UTF-8)."], "io": [["Input", "path:string"], ["Output", "Lines, Words, Chars"]], "extensions": ["Word frequency report."]}, "Project09_SimpleTodo": {"overview": "CLI TODO with add/del/list/exit.", "steps": ["cd projects/Project09_SimpleTodo", "dotnet run"], "io": [["Commands", "add <text>, del <index>, list, exit"]], "extensions": ["Persist to disk.", "Mark done/undone."]}, "Project10_StudentGrades": {"overview": "Average and Top3 of grades.", "steps": ["cd projects/Project10_StudentGrades", "dotnet run", "Enter space-separated grades."], "io": [["Input", "grades:double..."], ["Output", "Average + Top3"]], "extensions": ["ASCII histogram."]}, "Project11_MatrixMultiply2x2": {"overview": "Multiply two fixed 2×2 matrices.", "steps": ["cd projects/Project11_MatrixMultiply2x2", "dotnet run"], "io": [["Output", "Matrix C"]], "extensions": ["Accept user input.", "Generalize to n×n."]}, "Project12_StringUtilities": {"overview": "Reverse string and check palindrome.", "steps": ["cd projects/Project12_StringUtilities", "dotnet run"], "io": [["Input", "text:string"], ["Output", "Reverse + Palindrome?"]], "extensions": ["Ignore spaces and punctuation."]}, "Project13_BMI": {"overview": "Compute BMI and category.", "steps": ["cd projects/Project13_BMI", "dotnet run"], "io": [["Input", "weight(kg), height(m)"], ["Output", "BMI & category"]], "extensions": ["Show healthy weight range."]}, "Project14_UnitConverter": {"overview": "Simple unit converter.", "steps": ["cd projects/Project14_UnitConverter", "dotnet run", "Choose 1 or 2."], "io": [["Input", "choice:int, value:double"]], "extensions": ["Add °C↔°F and km↔mile."]}, "Project15_DateDiff": {"overview": "Date difference (days/hours).", "steps": ["cd projects/Project15_DateDiff", "dotnet run"], "io": [["Input", "start,end (yyyy-mm-dd)"]], "extensions": ["Show minutes/seconds."]}, "Project16_PasswordGenerator": {"overview": "Random password generator.", "steps": ["cd projects/Project16_PasswordGenerator", "dotnet run", "Enter length."], "io": [["Input", "length:int"], ["Output", "password:string"]], "extensions": ["Toggle symbol set.", "Strength meter."]}, "Project17_JsonReadWrite": {"overview": "Serialize/deserialize people with System.Text.Json.", "steps": ["cd projects/Project17_JsonReadWrite", "dotnet run"], "io": null, "extensions": ["Save to file.", "Add new person from input."]}, "Project18_HttpGetDemo": {"overview": "HttpClient GET (async).", "steps": ["cd projects/Project18_HttpGetDemo", "dotnet run", "Enter URL."], "io": [["Input", "url:string"], ["Output", "Length or Error"]], "extensions": ["Save response to file.", "Show HTTP status code."]}, "Project19_CsvParser": {"overview": "CSV parser to columns.", "steps": ["cd projects/Project19_CsvParser", "dotnet run", "Enter CSV path."], "io": [["Input", "path:string"]], "extensions": ["Support quotes and commas inside."]}, "Project20_LinqExamples": {"overview": "LINQ filter/map (squares of evens).", "steps": ["cd projects/Project20_LinqExamples", "dotnet run"], "io": null, "extensions": ["Aggregate and Average."]}}, "winforms": {"Project01_LoginForm": {"overview": "Simple login form.", "controls": [["TextBox", "txtUser", "PlaceholderText=\"Username\""], ["TextBox", "txtPass", "UseSystemPasswordChar=true"], ["Button", "btnLogin", "Text=\"Login\""]], "steps": ["Open `winforms/Project01_LoginForm`", "Run ▶︎ and test admin/1234."], "extensions": ["Validate empty fields.", "Show next form on success."]}, "Project02_NotepadLite": {"overview": "Lightweight Notepad with Open/Save.", "controls": [["MenuStrip", "menu", "File → Open/Save"], ["TextBox", "txt", "Multiline, Dock=Fill"]], "steps": ["Open `winforms/Project02_NotepadLite`", "Test open and save."], "extensions": ["Find/Replace dialog."]}, "Project03_CalculatorGui": {"overview": "GUI calculator.", "controls": [["TextBox", "a, op, b", "inputs"], ["Label", "result", "output"], ["Button", "btnCalc", "="]], "steps": ["Open `winforms/Project03_CalculatorGui`", "Try + - * /"], "extensions": ["Separate buttons for ops."]}, "Project04_TodoList": {"overview": "TODO with ListBox.", "controls": [["TextBox", "txt", "input"], ["Button", "btnAdd/btnDel", "add/remove"], ["ListBox", "list", "items"]], "steps": ["Open `winforms/Project04_TodoList`", "Add/remove items."], "extensions": ["Persist to file."]}, "Project05_StopwatchTimer": {"overview": "Stopwatch using Timer.", "controls": [["Label", "lbl", "display"], ["Button", "btnStart/btnStop", "start/stop"], ["Timer", "t", "Interval=1000 (Forms)"]], "steps": ["Open `winforms/Project05_StopwatchTimer`", "Test Start/Stop."], "extensions": ["Lap/Reset buttons.", "mm:ss format."]}, "Project06_PictureViewer": {"overview": "Image viewer (PictureBox).", "controls": [["Button", "btnOpen", "OpenFileDialog"], ["PictureBox", "pic", "Zoom, Dock=Fill"]], "steps": ["Open `winforms/Project06_PictureViewer`", "Open an image."], "extensions": ["Drag & Drop support."]}, "Project07_ColorPickerTracks": {"overview": "RGB color picker (TrackBars).", "controls": [["TrackBar", "r,g,b", "0..255"], ["Panel", "preview", "BackColor"]], "steps": ["Open `winforms/Project07_ColorPickerTracks`", "Move sliders — color updates."], "extensions": ["Copy hex value."]}, "Project08_GridStudents": {"overview": "Students grid (DataGridView).", "controls": [["DataGridView", "data", "Name/Age columns"]], "steps": ["Open `winforms/Project08_GridStudents`", "Edit rows."], "extensions": ["Validation for Age."]}, "Project09_WebBrowserLite": {"overview": "Light web browser.", "controls": [["TextBox", "txt", "URL"], ["Button", "btnGo", "Navigate"], ["WebBrowser", "web", "Dock=Fill"]], "steps": ["Open `winforms/Project09_WebBrowserLite`", "Enter URL and Go."], "extensions": ["Back/Forward buttons."]}, "Project10_DrawPad": {"overview": "Simple drawing pad.", "controls": [["Form", "(self)", "DoubleBuffered=true"]], "steps": ["Open `winforms/Project10_DrawPad`", "Draw with mouse."], "extensions": ["Save to file."]}, "Project11_ProgressDemo": {"overview": "Progress simulation with Timer.", "controls": [["ProgressBar", "bar", ""], ["Button", "btnStart", ""], ["Timer", "t", "Interval=100 (Forms)"]], "steps": ["Open `winforms/Project11_ProgressDemo`", "Click Start."], "extensions": ["Cancel/Stop.", "Show % label."]}, "Project12_TwoFormsComm": {"overview": "Pass text to child form.", "controls": [["TextBox", "txt", "input"], ["Button", "btnOpen", "child form"]], "steps": ["Open `winforms/Project12_TwoFormsComm`", "Click Open."], "extensions": ["Return value from child."]}, "Project13_ThemeToggle": {"overview": "Theme toggle (dark/light).", "controls": [["Button", "btnToggle", "Toggle"]], "steps": ["Open `winforms/Project13_ThemeToggle`", "Toggle theme."], "extensions": ["Persist theme."]}, "Project14_ClipboardTool": {"overview": "Clipboard copy/paste.", "controls": [["TextBox", "txt", ""], ["Button", "btnCopy/btnPaste", ""]], "steps": ["Open `winforms/Project14_ClipboardTool`", "Test Copy/Paste."], "extensions": ["Shortcuts Ctrl+C/V."]}, "Project15_NotifyIconDemo": {"overview": "System tray notify icon.", "controls": [["NotifyIcon", "ni", "BalloonTip"]], "steps": ["Open `winforms/Project15_NotifyIconDemo`", "Balloon shows on run."], "extensions": ["Context menu."]}, "Project16_FileWatcher": {"overview": "Watch Desktop folder changes.", "controls": [["FileSystemWatcher", "w", "Path=Desktop"], ["ListBox", "list", "events"]], "steps": ["Open `winforms/Project16_FileWatcher`", "Create a file on Desktop."], "extensions": ["Show Changed/Deleted/Renamed."]}, "Project17_KeyTester": {"overview": "Log pressed keys.", "controls": [["ListBox", "list", "Dock=Fill"]], "steps": ["Open `winforms/Project17_KeyTester`", "Press keys."], "extensions": ["Time stamps."]}, "Project18_JsonSettings": {"overview": "Save username to JSON.", "controls": [["TextBox", "txt", ""], ["Button", "btnSave", ""]], "steps": ["Open `winforms/Project18_JsonSettings`", "Click Save."], "extensions": ["Use AppData path."]}, "Project19_ResizeInfo": {"overview": "Show window size on resize.", "controls": [["Label", "lbl", "Dock=Fill"]], "steps": ["Open `winforms/Project19_ResizeInfo`", "Resize the window."], "extensions": ["Show DPI/scale."]}, "Project20_ShowTime": {"overview": "Show current time MessageBox.", "controls": [["Button", "btn", "Dock=Fill"]], "steps": ["Open `winforms/Project20_ShowTime`", "Click the button."], "extensions": ["Custom time format."]}}};
+const rows = document.getElementById('rows');
+function render(filter='all', q=''){ 
+  rows.innerHTML=''; 
+  data.filter(d=> (filter==='all'||d.type===filter) && d.name.toLowerCase().includes(q.toLowerCase()))
+      .forEach(d=>{
+        const png = `images/${d.name}.png`;
+        const tr=document.createElement('tr'); tr.className='border-b';
+        tr.innerHTML = `<td class='p-2 text-center'>${d.i}</td>
+          <td class='p-2'>${d.name}</td>
+          <td class='p-2'>${d.type}</td>
+          <td class='p-2'><a class='text-blue-600 underline' href='${d.path}' target='_blank'>Open folder</a></td>
+          <td class='p-2'><button class='px-2 py-1 bg-indigo-600 text-white rounded' data-path='${d.path}' data-type='code'>View code</button></td>
+          <td class='p-2'><button class='px-2 py-1 bg-emerald-600 text-white rounded' data-name='${d.name}' data-type='guide'>Guide</button></td>
+          <td class='p-2'><img src='${png}' alt='screenshot' class='sshot' onerror="this.outerHTML='<span class=\'text-gray-500\'>No screenshot</span>'"></td>`;
+        rows.appendChild(tr);
+      });
+}
+render();
+document.querySelectorAll('button[data-filter]').forEach(b=> b.onclick = ()=>{
+  document.querySelectorAll('button[data-filter]').forEach(x=>x.className='px-3 py-1 bg-gray-200 rounded');
+  b.className='px-3 py-1 bg-indigo-600 text-white rounded'; render(b.dataset.filter, document.getElementById('q').value || '');
+});
+document.getElementById('q').oninput = (e)=> render(document.querySelector('button[data-filter].text-white')?.dataset.filter || 'all', e.target.value);
+rows.onclick = async (e)=>{
+  if(e.target.tagName==='BUTTON'){
+    const type = e.target.getAttribute('data-type');
+    if(type==='code'){
+      const path = e.target.getAttribute('data-path');
+      let file = path.includes('projects') ? `${path}/Program.cs` : `${path}/Form1.cs`;
+      showCode(path, await fetch(file).then(r=>r.text()).catch(()=> 'Cannot load code.'));
+    } else if(type==='guide'){
+      const name = e.target.getAttribute('data-name');
+      showGuide(name);
+    }
+  }
+};
+function showCode(title, code){ document.getElementById('mTitleCode').innerText = title; document.getElementById('mCode').innerText = code; document.getElementById('modalCode').classList.remove('hidden'); document.getElementById('modalCode').classList.add('flex'); }
+function hideCode(){ document.getElementById('modalCode').classList.add('hidden'); document.getElementById('modalCode').classList.remove('flex'); }
+function showGuide(name){
+  const g = (GUIDE.console[name] || GUIDE.winforms[name]);
+  document.getElementById('mTitleGuide').innerText = name;
+  const wrap = document.getElementById('mGuide');
+  wrap.innerHTML='';
+  if(!g){ wrap.innerHTML='<p>No guide available.</p>'; document.getElementById('modalGuide').classList.remove('hidden'); document.getElementById('modalGuide').classList.add('flex'); return;}
+  const ov = document.createElement('div'); ov.innerHTML = '<h3 class="text-lg font-bold">🔎 Overview</h3><p>'+ (g.overview||'') +'</p>'; wrap.appendChild(ov);
+  if(g.steps){ const ul = document.createElement('ul'); ul.className='list-disc list-inside'; g.steps.forEach(s=>{ const li=document.createElement('li'); li.textContent=s; ul.appendChild(li); }); const box=document.createElement('div'); box.innerHTML='<h3 class="text-lg font-bold">🪜 Steps</h3>'; box.appendChild(ul); wrap.appendChild(box); }
+  if(g.io){ const box=document.createElement('div'); box.innerHTML='<h3 class="text-lg font-bold">🧩 I/O</h3>'; const table=document.createElement('table'); table.className='table'; table.innerHTML='<thead><tr><th>Part</th><th>Details</th></tr></thead>'; const tb=document.createElement('tbody'); g.io.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML='<td>'+r[0]+'</td><td>'+r[1]+'</td>'; tb.appendChild(tr); }); table.appendChild(tb); box.appendChild(table); wrap.appendChild(box); }
+  if(g.controls){ const box=document.createElement('div'); box.innerHTML='<h3 class="text-lg font-bold">🎛 Controls Layout</h3>'; const table=document.createElement('table'); table.className='table'; table.innerHTML='<thead><tr><th>Control Type</th><th>Name</th><th>Properties</th></tr></thead>'; const tb=document.createElement('tbody'); g.controls.forEach(c=>{ const tr=document.createElement('tr'); tr.innerHTML='<td><span class="badge">'+c[0]+'</span></td><td><code>'+c[1]+'</code></td><td>'+c[2]+'</td>'; tb.appendChild(tr); }); table.appendChild(tb); box.appendChild(table); wrap.appendChild(box); }
+  if(g.extensions){ const ul=document.createElement('ul'); ul.className='list-disc list-inside'; g.extensions.forEach(s=>{ const li=document.createElement('li'); li.textContent=s; ul.appendChild(li); }); const box=document.createElement('div'); box.innerHTML='<h3 class="text-lg font-bold">🚀 Extensions</h3>'; box.appendChild(ul); wrap.appendChild(box); }
+  document.getElementById('modalGuide').classList.remove('hidden'); document.getElementById('modalGuide').classList.add('flex');
+}
+function hideGuide(){ document.getElementById('modalGuide').classList.add('hidden'); document.getElementById('modalGuide').classList.remove('flex'); }
+</script>
+</body></html>

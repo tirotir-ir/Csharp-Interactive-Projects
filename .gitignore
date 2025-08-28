@@ -1,0 +1,18 @@
+
+# Build
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.userprefs
+# Logs
+*.log
+# OS
+.DS_Store
+Thumbs.db
+# Web
+node_modules/
+# Images generated at runtime
+images/*.png
+!images/.gitkeep
